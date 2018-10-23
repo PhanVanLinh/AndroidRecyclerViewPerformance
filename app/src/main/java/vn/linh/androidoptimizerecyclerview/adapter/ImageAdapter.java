@@ -17,10 +17,11 @@ import vn.linh.androidoptimizerecyclerview.model.ImageItem;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemImageHolder> {
     final String TAG = getClass().getSimpleName();
     private int createViewHolderCount;
-
+    private RecyclerView mRecyclerView;
     public List<ImageItem> imageItems = new ArrayList<>();
 
-    public ImageAdapter() {
+    public ImageAdapter(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
     }
 
     public void setImages(List<ImageItem> imageItems) {
@@ -31,15 +32,25 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemImageHol
     @NonNull
     @Override
     public ItemImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_image, parent, false);
-        Log.i(TAG, "onCreateViewHolder " + createViewHolderCount++);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_image, parent, false);
+        Log.i(TAG, "onCreateViewHolder "
+                + createViewHolderCount++
+                + " pool:"
+                + mRecyclerView.getRecycledViewPool().getRecycledViewCount(0));
+//        mRecyclerView.setItemViewCacheSize();
         ItemImageHolder holder = new ItemImageHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemImageHolder holder, int position) {
-        Log.i(TAG, "onBindViewHolder pos:" + position + " reused-value:" + holder.tvTitle.getText());
+        Log.i(TAG, "onBindViewHolder pos:"
+                + position
+                + " reused-value:"
+                + holder.tvTitle.getText()
+                + " pool:"
+                + mRecyclerView.getRecycledViewPool().getRecycledViewCount(0));
         ImageItem imageItem = imageItems.get(position);
         holder.tvTitle.setText(imageItem.getText());
         holder.root.setBackgroundColor(imageItem.getColor());
@@ -63,7 +74,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ItemImageHol
 
         @Override
         public void onClick(View v) {
-//            if (mClickListener != null) mClickListener.onItemClick(v, getAdapterPosition());
+            //            if (mClickListener != null) mClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 }
